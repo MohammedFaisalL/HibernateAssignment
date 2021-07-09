@@ -8,9 +8,12 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
+import com.te.StudentProject.NotFoundException;
+
 public class DeleteData {
 
 	static Scanner scanner = new Scanner(System.in);
+
 	public static void delete() {
 		System.out.println("Enter rollno you want to delete : ");
 		int rollno = scanner.nextInt();
@@ -26,11 +29,14 @@ public class DeleteData {
 
 			String updateData = "delete from Student where rollno=:rollno";
 			Query query = manager.createQuery(updateData);
-            query.setParameter("rollno",rollno);
-			
-			int result = query.executeUpdate();
+			query.setParameter("rollno", rollno);
 
-			System.out.println(result + " rows affected!!");
+			int result = query.executeUpdate();
+			if (result > 0) {
+				System.out.println(result + " rows affected!!");
+			} else {
+				throw new NotFoundException();
+			}
 			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,5 +50,5 @@ public class DeleteData {
 		}
 
 	}
-	
+
 }
