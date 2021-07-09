@@ -8,11 +8,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
+import com.te.StudentProject.NotFoundException;
 import com.te.StudentProject.Student;
 
 public class DisplayData {
 
 	static Scanner scanner = new Scanner(System.in);
+
 	public static void displayAll() {
 		EntityManagerFactory factory = null;
 		EntityManager manager = null;
@@ -40,7 +42,7 @@ public class DisplayData {
 			}
 		}
 	}
-	
+
 	public static void displayOne() {
 		System.out.println("Enter rollno you want to search : ");
 		int rollno = scanner.nextInt();
@@ -53,14 +55,17 @@ public class DisplayData {
 
 			String readAll = "from Student where rollno=:rollno";
 			Query query = manager.createQuery(readAll);
-            query.setParameter("rollno", rollno);
-			
-			Student student = (Student) query.getSingleResult();
+			query.setParameter("rollno", rollno);
 
-			System.out.println("Student Rollno : "+student.getRollno());
-			System.out.println("Student Name : "+student.getName());
-			System.out.println("Student Phno : "+student.getPhno());
-			System.out.println("Student Dob : "+student.getDob());
+			Student student = (Student) query.getSingleResult();
+			if (student != null) {
+				System.out.println("Student Rollno : " + student.getRollno());
+				System.out.println("Student Name : " + student.getName());
+				System.out.println("Student Phno : " + student.getPhno());
+				System.out.println("Student Dob : " + student.getDob());
+			} else {
+				throw new NotFoundException();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
